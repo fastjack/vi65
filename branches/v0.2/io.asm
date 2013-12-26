@@ -16,7 +16,7 @@
 ;    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ;
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 ciov		= $e456
 iccom		= $342
 icba		= $344
@@ -25,12 +25,12 @@ icax1		= $34a
 icax2		= $34b
 
 critical	.byte 0
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 moncout		= $fded
 moncin		= $fd0c
 		.fi
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 open		.proc
 		ldx #$20
 		sta icax1,x
@@ -47,7 +47,7 @@ open		.proc
 		sta icax2,x
 		jmp ciov		;open
 		.pend
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 open		.proc
 		pha
 		ldy #close.op
@@ -65,7 +65,7 @@ do		jsr close.in
 		lda #$8d
 		jmp moncout
 		.pend
-		.elsif (TARGET=PET40) | (TARGET=PET80)
+		.elsif (TARGET==PET40) || (TARGET==PET80)
 open		.proc
 		lda #1
 		;ldx drive
@@ -136,7 +136,7 @@ an		ldx #<(filename-4)
 		ldx #<$200
 		ldy #>$200
 		jsr $ffbd
-		.if TARGET=C128
+		.if TARGET==C128
 		stx $ae
 		sty $af
 		tay
@@ -150,14 +150,14 @@ an		ldx #<(filename-4)
 		.pend
 		.fi
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 close		.proc
 		ldx #$20
 		lda #12
 		sta iccom,x
 		jmp ciov		;close
 		.pend
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 close		.proc
 		ldy #cl
 in		lda #$84
@@ -176,7 +176,7 @@ wr		.null "W"+128, "R"+128, "I"+128, "T"+128, "E"+128, " "+128
 cl		.null "C"+128, "L"+128, "O"+128, "S"+128, "E"+128,$8d
 		.here
 		.pend
-		.elsif (TARGET=PET40) | (TARGET=PET80)
+		.elsif (TARGET==PET40) || (TARGET==PET80)
 close		.proc
 		jsr clrchn
 		ldx #3

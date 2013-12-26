@@ -146,7 +146,7 @@ skipspace	inx
 
 exit		pla
 		pla
-		.if (TARGET=C64) | (TARGET=PLUGIN) | (TARGET=C128) | (TARGET=VIC20) | (TARGET=VIC20BIG) | (TARGET=PLUS4) | (TARGET=C16) | (TARGET=PET40) | (TARGET=PET80) | (TARGET=ATARI800)
+		.if (TARGET==C64) || (TARGET==PLUGIN) || (TARGET==C128) || (TARGET==VIC20) || (TARGET==VIC20BIG) || (TARGET==PLUS4) || (TARGET==C16) || (TARGET==PET40) || (TARGET==PET80) || (TARGET==ATARI800)
 		sei
 		#movew irq.old+1, virq
 		cli
@@ -251,7 +251,7 @@ cmd_X		.proc
 		.pend
 
 cmd_put		.proc
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		cpy #32
 		blt cmd_h.x
 		cpy #$7d

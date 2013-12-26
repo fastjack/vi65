@@ -59,15 +59,15 @@ skipspace	inx
 
 exit		pla
 		pla
-		.if (TARGET=C64) | (TARGET=PLUGIN) | (TARGET=C128) | (TARGET=VIC20) | (TARGET=VIC20BIG) | (TARGET=PLUS4) | (TARGET=C16)
+		.if (TARGET==C64) || (TARGET==PLUGIN) || (TARGET==C128) || (TARGET==VIC20) || (TARGET==VIC20BIG) || (TARGET==PLUS4) || (TARGET==C16)
 		sei
 		#movew irq.old+1, $314
 		cli
-		.elsif (TARGET=PET40) | (TARGET=PET80)
+		.elsif (TARGET==PET40) || (TARGET==PET80)
 		sei
 		#movew irq.old+1, $90
 		cli
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		sei
 		#movew irq.old+1, $224
 		cli
@@ -167,7 +167,7 @@ ex_X		.proc
 		.pend
 
 ex_put		.proc
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		cpy #32
 		blt ex_h.x
 		cpy #$7d

@@ -84,7 +84,7 @@ notxt		.text 0
 put		tya
 		ldx #keylookup.motionkeys2
 		jsr keylookup
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		cpy #$7d
 		bge baj
 		cpy #32
