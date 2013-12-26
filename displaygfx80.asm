@@ -16,30 +16,30 @@
 ;    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ;
 
-		.if (TARGET=C64) | (TARGET=PLUGIN)
+		.if (TARGET==C64) || (TARGET==PLUGIN)
 scr		= $e000
 col		= $dc00
 width		= 80
 height		= 25
 cache		= $334
-		.elsif (TARGET=PLUS4)
+		.elsif (TARGET==PLUS4)
 scr		= $e000
 col		= $0c00
 width		= 80
 height		= 23
 cache		= $333
-		.elsif TARGET=C128
+		.elsif TARGET==C128
 scr		= $a000
 col		= $8c00
 width		= 80
 height		= 25
 cache		= $0b00
-		.elsif TARGET=VIC20BIG
+		.elsif TARGET==VIC20BIG
 scr		= $04e0
 width		= 40
 height		= 22
 cache		= $0334
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 width		= 80
 height		= 24
 cache		= $0489
@@ -62,12 +62,12 @@ displayinit	.proc
 		sta cursor.size
 		lda #statusmsg.banner
 		jsr setstatusmsg
-		.if (TARGET!=C128) & (TARGET!=ATARI800)
+		.if (TARGET!=C128) && (TARGET!=ATARI800)
 		jsr display
 		.fi
-		.if (TARGET=C64) | (TARGET=C128) | (TARGET=PLUGIN)
+		.if (TARGET==C64) || (TARGET==C128) || (TARGET==PLUGIN)
 		#kernal
-		.if (TARGET=C128)
+		.if (TARGET==C128)
 		lda #$47
 		sta $d506
 		lda #$7f
@@ -81,7 +81,7 @@ displayinit	.proc
 		bne -
 		lda #3-(scr >> 14)
 		sta $dd00
-		.if TARGET=C128
+		.if TARGET==C128
 		#gfx
 		.else
 		#ram
@@ -93,14 +93,14 @@ cl		sta col,x
 		sta col+$300,x
 		inx
 		bne cl
-		.if TARGET=C128
+		.if TARGET==C128
 		#ram
 		.fi
 		rts
 
 c1		.byte $15, $20, $11, $16, $18
 c2		.byte $00, $06, $3b, $08, ((col >> 6) & $f0)+((scr & $2000) >> 10)
-		.elsif (TARGET=PLUS4)
+		.elsif (TARGET==PLUS4)
 		lda #$06
 		sta $ff19
 		lda #$37
@@ -137,7 +137,7 @@ cl		sta $ff00,x
 		dey
 		bpl cl
 		rts
-		.elsif TARGET=VIC20BIG
+		.elsif TARGET==VIC20BIG
 		lda #width2
 		sta $9002
 		lda #$17
@@ -156,7 +156,7 @@ cl		sta $ff00,x
 		inx
 		bne -
 		rts
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		ldx #$30
 		lda #3
 		sta iccom,x
@@ -185,8 +185,8 @@ dpname		.text "S:",k_return
 
 displayexit	.proc
 		#kernal
-		.if (TARGET=C64) | (TARGET=C128) | (TARGET=PLUGIN)
-		.if (TARGET=C128)
+		.if (TARGET==C64) || (TARGET==C128) || (TARGET==PLUGIN)
+		.if (TARGET==C128)
 		lda #$04
 		sta $d506
 		.fi
@@ -198,7 +198,7 @@ displayexit	.proc
 		sta $dd00
 		lda #147
 		jmp chrout
-		.elsif (TARGET=C16) | (TARGET=PLUS4)
+		.elsif (TARGET==C16) || (TARGET==PLUS4)
 		lda #$1b
 		sta $ff06
 		lda #$c7
@@ -207,7 +207,7 @@ displayexit	.proc
 		sta $ff14
 		lda #147
 		jmp chrout
-		.elsif (TARGET=ATARI800)
+		.elsif (TARGET==ATARI800)
 		ldx #$20
 		lda #12
 		sta iccom,x
@@ -222,7 +222,7 @@ displayexit	.proc
 
 displaylowinit	.proc
 p3		= num
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda $58
 		clc
 		adc #<(width2*8-8)
@@ -252,7 +252,7 @@ p3		= num
 
 loop		jsr paintone
 
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		lda p3
 		and #8
 		beq +
@@ -268,7 +268,7 @@ loop		jsr paintone
 		sbc #>(width2*16-8)
 		sta p3+1
 ek
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		lda p3
 		clc
 		adc #<(width2*7)
@@ -309,14 +309,14 @@ in		lda cachel,x
 		bne ng
 garbagelow	cmp #0
 		bge ng
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		lda p3
 		adc #<(width2*16)
 		sta p3
 		lda p3+1
 		adc #>(width2*16)
 		sta p3+1
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		lda p3
 		adc #width2
 		sta p3
@@ -414,16 +414,16 @@ er		asl
 		gcc lp2
 
 k1		sty ez+1
-		.if TARGET=C128
+		.if TARGET==C128
 		#gfx
 		.fi
 
 		ldy #7
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		clc
 		.fi
 -
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda p3
 		sbc #width2-1-1
 		sta p3
@@ -442,11 +442,11 @@ u1		ora tmpl,y
 		dey
 		bpl -
 
-		.if TARGET=C128
+		.if TARGET==C128
 		#ram
 		.fi
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda p3
 		;clc
 		adc #<(width2*8-8+1)
@@ -455,7 +455,7 @@ u1		ora tmpl,y
 		adc #>(width2*8-8+1)
 		sta p3+1
 		.else
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		lda #16
 		.else
 		lda #8
@@ -469,7 +469,7 @@ u1		ora tmpl,y
 		jmp lp
 
 fin
-		.if TARGET=C128
+		.if TARGET==C128
 		#gfx
 		.fi
 		tya
@@ -480,7 +480,7 @@ fin
 		bcc b
 		inc x
 -
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda p3
 		sec
 		sbc #width2-1
@@ -494,7 +494,7 @@ fin
 		dey
 		bpl -
 l2
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda p3
 		clc
 		adc #<(width2*8-8)
@@ -504,13 +504,13 @@ l2
 		sta p3+1
 		.fi
 l		ldy #7
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		inc p3
 		bne +
 		inc p3+1
 +
 		.else
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		lda #15
 		.else
 		tya
@@ -525,7 +525,7 @@ l		ldy #7
 		inx
 b		cpx #width2
 		bge ko
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 -		lda p3
 		sec
 		sbc #width2-1
@@ -553,7 +553,7 @@ ko		cpx #width2
 		lda x
 		sta caches,x
 jo
-		.if TARGET=C128
+		.if TARGET==C128
 		#ram
 		.fi
 
@@ -568,13 +568,13 @@ ao		cmp #0
 		bne nc
 		lda #255
 		sta ao+1
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		lda p3
 		sbc #<(width2*16)
 		sta p2
 		lda p3+1
 		sbc #>(width2*16)
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		lda p3
 		sbc #<(width2-8)
 		sta p2
@@ -591,14 +591,14 @@ ao		cmp #0
 cursorcol	lda #0
 		sbc column2
 		tay
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lsr
 		clc
 		.else
 		asl
 		asl
 		and #$f8
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		asl
 		.fi
 		bcc +
@@ -610,7 +610,7 @@ cursorcol	lda #0
 		bcc +
 		inx
 +
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		sta cursor.at1+1
 		stx cursor.at2+1
 		.else
@@ -635,7 +635,7 @@ cursorcol	lda #0
 		ldx sor
 nc		rts
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 class		.byte >(font+2*8*32),>font,>(font+8*32),>(font+3*8*32)
 		.byte >(font+2*8*32),>font,>(font+8*32),>(font+3*8*32)
 		;.byte >(font+3*8*32),>(font+8*32),>(font+2*8*32),>font
@@ -656,7 +656,7 @@ caches		.fill height
 
 		*= o
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 font		.binary "atascii4x8.fnt",2,$400
 		.else
 font		.binary "petscii4x8.fnt",2,$400
@@ -675,7 +675,7 @@ on		lda #0
 		eor #1
 in		sta on+1
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 at1		lda #0
 		sta screen
 at2		lda #0
@@ -696,7 +696,7 @@ k		eor #0
 		dex
 		bne -
 		.else
-		.if TARGET=C128
+		.if TARGET==C128
 		#gfx
 		.fi
 size		= *+1
@@ -709,7 +709,7 @@ at2		sta scr,y
 		dey
 		dex
 		bne -
-		.if TARGET=C128
+		.if TARGET==C128
 		#ram
 		.fi
 		.fi

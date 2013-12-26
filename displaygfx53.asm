@@ -16,40 +16,40 @@
 ;    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ;
 
-		.if (TARGET=C64) | (TARGET=PLUGIN)
+		.if (TARGET==C64) || (TARGET==PLUGIN)
 scr		= $e000
 col		= $dc00
 width2		= 40
 height		= 25
 cache		= $334
-		.elsif (TARGET=PLUS4)
+		.elsif (TARGET==PLUS4)
 scr		= $e000
 col		= $0c00
 width2		= 40
 height		= 23
 cache		= $333
-		.elsif TARGET=C128
+		.elsif TARGET==C128
 scr		= $a000
 col		= $8c00
 width2		= 40
 height		= 25
 cache		= $0b00
-		.elsif TARGET=VIC20BIG
+		.elsif TARGET==VIC20BIG
 scr		= $04e0
 width2		= 20
 height		= 22
 cache		= $0334
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 width2		= 40
 height		= 24
 cache		= $0489
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 scr		= $2000
 width2		= 40
 height		= 24
 cache		= $0800
 		.fi
-		.if TARGET=APPLE2
+		.if TARGET==APPLE2
 width		= width2*7/6
 		.else
 width		= width2*8/6
@@ -71,12 +71,12 @@ displayinit	.proc
 		sta cursor.size
 		lda #statusmsg.banner
 		jsr setstatusmsg
-		.if (TARGET!=C128) & (TARGET!=ATARI800)
+		.if (TARGET!=C128) && (TARGET!=ATARI800)
 		jsr display
 		.fi
-		.if (TARGET=C64) | (TARGET=C128) | (TARGET=PLUGIN)
+		.if (TARGET==C64) || (TARGET==C128) || (TARGET==PLUGIN)
 		#kernal
-		.if (TARGET=C128)
+		.if (TARGET==C128)
 		lda #$47
 		sta $d506
 		lda #$7f
@@ -90,7 +90,7 @@ displayinit	.proc
 		bne -
 		lda #3-(scr >> 14)
 		sta $dd00
-		.if TARGET=C128
+		.if TARGET==C128
 		#gfx
 		.else
 		#ram
@@ -102,14 +102,14 @@ cl		sta col,x
 		sta col+$300,x
 		inx
 		bne cl
-		.if TARGET=C128
+		.if TARGET==C128
 		#ram
 		.fi
 		rts
 
 c1		.byte $15, $20, $11, $16, $18
 c2		.byte $00, $06, $3b, $08, ((col >> 6) & $f0)+((scr & $2000) >> 10)
-		.elsif (TARGET=PLUS4)
+		.elsif (TARGET==PLUS4)
 		lda #$06
 		sta $ff19
 		sta $ff15
@@ -147,7 +147,7 @@ cl		sta $ff00,x
 		dey
 		bpl cl
 		rts
-		.elsif TARGET=VIC20BIG
+		.elsif TARGET==VIC20BIG
 		lda #width2
 		sta $9002
 		lda #$17
@@ -166,7 +166,7 @@ cl		sta $ff00,x
 		inx
 		bne -
 		rts
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		ldx #$30
 		lda #3
 		sta iccom,x
@@ -190,7 +190,7 @@ cl		sta $ff00,x
 		rts
 
 dpname		.text "S:",k_return
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		bit $c052		;nomix
 		;bit $c055	 ;page2
 		bit $c057		;hires
@@ -201,8 +201,8 @@ dpname		.text "S:",k_return
 
 displayexit	.proc
 		#kernal
-		.if (TARGET=C64) | (TARGET=C128) | (TARGET=PLUGIN)
-		.if (TARGET=C128)
+		.if (TARGET==C64) || (TARGET==C128) || (TARGET==PLUGIN)
+		.if (TARGET==C128)
 		lda #$04
 		sta $d506
 		.fi
@@ -214,7 +214,7 @@ displayexit	.proc
 		sta $dd00
 		lda #147
 		jmp chrout
-		.elsif (TARGET=C16) | (TARGET=PLUS4)
+		.elsif (TARGET==C16) || (TARGET==PLUS4)
 		lda $ff07
 		and #$f8
 		sta $ff07
@@ -226,7 +226,7 @@ displayexit	.proc
 		sta $ff14
 		lda #147
 		jmp chrout
-		.elsif (TARGET=ATARI800)
+		.elsif (TARGET==ATARI800)
 		ldx #$20
 		lda #12
 		sta iccom,x
@@ -235,14 +235,14 @@ displayexit	.proc
 		lda #12
 		sta iccom,x
 		jmp ciov		;close
-		.elsif (TARGET=APPLE2)
+		.elsif (TARGET==APPLE2)
 		rts
 		.fi
 		.pend
 
 displaylowinit	.proc
 p3		= num
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda $58
 		clc
 		adc #<(width2*8-8)
@@ -250,7 +250,7 @@ p3		= num
 		lda $59
 		adc #>(width2*8-8)
 		sta p3+1
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		#loadw (scr+8*1024-8), p3
 		.else
 		#loadw scr, p3
@@ -277,7 +277,7 @@ p3		= num
 
 loop		jsr paintone
 
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		lda p3
 		and #8
 		beq +
@@ -293,7 +293,7 @@ loop		jsr paintone
 		sbc #>(width2*16-8)
 		sta p3+1
 ek
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		lda p3
 		clc
 		adc #<(width2*7)
@@ -301,7 +301,7 @@ ek
 		lda p3+1
 		adc #>(width2*7)
 		sta p3+1
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		lda p3
 		clc
 		adc #<(128-40)
@@ -341,7 +341,7 @@ leng		cpx #height-1
 		rts
 		.pend
 
-		.if (TARGET=APPLE2)
+		.if (TARGET==APPLE2)
 		.cerror *>$2000
 		*= $4000
 		.fi
@@ -365,21 +365,21 @@ in		lda cachel,x
 		bne ng
 garbagelow	cmp #0
 		bge ng
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		lda p3
 		adc #<(width2*16)
 		sta p3
 		lda p3+1
 		adc #>(width2*16)
 		sta p3+1
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		lda p3
 		adc #width2
 		sta p3
 		bcc +
 		inc p3+1
 +
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		lda p3
 		adc #40
 		sta p3
@@ -414,14 +414,14 @@ ng
 		lda #0
 		sta x
 		sta ez+1
-		.if TARGET=APPLE2
+		.if TARGET==APPLE2
 		sta q+1
 		.fi
 		adc line2+1
 		cpy lines
 		sbc lines+1
 		bcc +
-		.if TARGET=APPLE2
+		.if TARGET==APPLE2
 		lda #"~"+128
 		.else
 		lda #"-"
@@ -451,7 +451,7 @@ ng
 		adc currentline+1
 		sta currenttext+1
 
-		.if TARGET=APPLE2
+		.if TARGET==APPLE2
 		jsr get
 lp2		inc x
 		sta u1+2
@@ -600,7 +600,7 @@ lp2		inc x
 		sta u1+1
 		jsr get
 -
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda p3
 		sec
 		sbc #width2-1
@@ -624,11 +624,11 @@ u1		ora tmpl,y
 		bpl -
 		jsr get2
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		clc
 		.fi
 -
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda p3
 		sbc #width2-1-1
 		sta p3
@@ -653,11 +653,11 @@ u1		ora tmpl,y
 		bpl -
 		jsr get2
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		clc
 		.fi
 -
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda p3
 		sbc #width2-1-1
 		sta p3
@@ -676,7 +676,7 @@ u1		ora tmpl,y
 		jmp lp2
 		.fi
 
-get2		.if TARGET=APPLE2
+get2		.if TARGET==APPLE2
 		lda p3
 		clc
 		adc #<(1024*8-8+1)
@@ -684,7 +684,7 @@ get2		.if TARGET=APPLE2
 		lda p3+1
 		adc #>(1024*8-8+1)
 		sta p3+1
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		lda p3
 		clc
 		adc #<(width2*8-8+1)
@@ -693,7 +693,7 @@ get2		.if TARGET=APPLE2
 		adc #>(width2*8-8+1)
 		sta p3+1
 		.else
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		lda #16
 		.else
 		lda #8
@@ -706,7 +706,7 @@ get2		.if TARGET=APPLE2
 +
 		.fi
 
-get		.if TARGET=C128
+get		.if TARGET==C128
 		#ram
 		.fi
 ez		ldy #0
@@ -726,7 +726,7 @@ er		asl
 		txa
 		and #7
 		tax
-		.if TARGET=C128
+		.if TARGET==C128
 		#gfx
 		.fi
 		lda class,x
@@ -744,11 +744,11 @@ fin		pla
 		sbc x
 		sta x
 		tax
-		.if TARGET=C128
+		.if TARGET==C128
 		#gfx
 		.fi
 
-		.if TARGET=APPLE2
+		.if TARGET==APPLE2
 		ldy #7
 q		lda #0
 		.else
@@ -761,7 +761,7 @@ q		lda #0
 		lsr
 		bne k
 -
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda p3
 		sec
 		sbc #width2-1
@@ -769,7 +769,7 @@ q		lda #0
 		bcs +
 		dec p3+1
 +
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		lda p3
 		sec
 		sbc #<1023
@@ -784,7 +784,7 @@ q		lda #0
 		bpl -
 		gmi l2
 k
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda p3
 		sec
 		sbc #width2-1
@@ -792,7 +792,7 @@ k
 		bcs +
 		dec p3+1
 +
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		lda p3
 		sec
 		sbc #<1023
@@ -806,7 +806,7 @@ k
 		dey
 		bpl k
 l2
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda p3
 		clc
 		adc #<(width2*8-8)
@@ -814,7 +814,7 @@ l2
 		lda p3+1
 		adc #>(width2*8-8)
 		sta p3+1
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		lda p3
 		clc
 		adc #<(1024*8-8)
@@ -824,13 +824,13 @@ l2
 		sta p3+1
 		.fi
 l		ldy #7
-		.if (TARGET=ATARI800) | (TARGET=APPLE2)
+		.if (TARGET==ATARI800) || (TARGET==APPLE2)
 		inc p3
 		bne +
 		inc p3+1
 +
 		.else
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		lda #15
 		.else
 		tya
@@ -845,7 +845,7 @@ l		ldy #7
 		inx
 b		cpx #width2
 		bge ko
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 -		lda p3
 		sec
 		sbc #width2-1
@@ -856,7 +856,7 @@ b		cpx #width2
 		sta (p3),y
 		dey
 		bpl -
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 -		lda p3
 		sec
 		sbc #<1023
@@ -885,7 +885,7 @@ ko		cpx #width2
 		lda x
 		sta caches,x
 jo
-		.if TARGET=C128
+		.if TARGET==C128
 		#ram
 		.fi
 
@@ -900,19 +900,19 @@ ao		cmp #0
 		bne nc
 		lda #255
 		sta ao+1
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		lda p3
 		sbc #<(width2*16)
 		sta p2
 		lda p3+1
 		sbc #>(width2*16)
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		lda p3
 		sbc #<(width2-8)
 		sta p2
 		lda p3+1
 		sbc #>(width2-8)
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		lda p3
 		sbc #<(40-8)
 		sta p2
@@ -932,7 +932,7 @@ cursorcol	lda #0
 		asl
 		adc x
 		asl
-		.if TARGET=APPLE2
+		.if TARGET==APPLE2
 		ldy #255
 		bcc +
 		ldy #35
@@ -968,14 +968,14 @@ cursorcol	lda #0
 		and #$7f
 		.else
 		tay
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		ror
 		lsr
 		lsr
 		clc
 		.else
 		and #$f8
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		asl
 		.fi
 		bcc +
@@ -1010,10 +1010,10 @@ cursorcol	lda #0
 		ldx sor
 nc		rts
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 class		.byte >(font+2*8*32),>font,>(font+8*32),>(font+3*8*32)
 		.byte >(font+2*8*32),>font,>(font+8*32),>(font+3*8*32)
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 class		.byte >(font+0*8*32),>(font+8*32),>(font+2*8*32),>(font+3*8*32)
 		.byte >(font+0*8*32),>(font+8*32),>(font+2*8*32),>(font+3*8*32)
 		.else
@@ -1023,7 +1023,7 @@ class		.byte >font,>(font+8*32),>font,>(font+2*8*32)
 o
 
 		.logical cache
-		.if (TARGET=ATARI800) | (TARGET=APPLE2)
+		.if (TARGET==ATARI800) || (TARGET==APPLE2)
 tmpl		.fill 8
 		.else
 tmpl		= $100
@@ -1036,9 +1036,9 @@ caches		.fill height
 
 		*= o
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 font		.binary "atascii6x8.fnt",2,$400
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 font		.binary "a2ascii6x8.fnt",2,$400
 		.else
 font		.binary "petscii6x8.fnt",2,$400
@@ -1057,7 +1057,7 @@ on		lda #0
 		eor #1
 in		sta on+1
 
-		.if (TARGET=ATARI800) | (TARGET=APPLE2)
+		.if (TARGET==ATARI800) || (TARGET==APPLE2)
 at1		lda #0
 		sta screen
 at2		lda #0
@@ -1066,7 +1066,7 @@ at2		lda #0
 size		= *+1
 		ldx #8
 -
-		.if (TARGET=ATARI800)
+		.if (TARGET==ATARI800)
 		lda screen
 		sec
 		sbc #width2
@@ -1074,7 +1074,7 @@ size		= *+1
 		bcs +
 		dec screen+1
 +
-		.elsif (TARGET=APPLE2)
+		.elsif (TARGET==APPLE2)
 		lda screen+1
 		sec
 		sbc #>1024
@@ -1095,7 +1095,7 @@ at1		lda #<scr
 		sta screen
 at2		lda #>scr
 		sta screen+1
-		.if TARGET=C128
+		.if TARGET==C128
 		#gfx
 		.fi
 size		= *+1
@@ -1109,7 +1109,7 @@ k		eor #0
 		bne -
 
 		ldx size
-		.if TARGET=VIC20BIG
+		.if TARGET==VIC20BIG
 		ldy #23
 		.else
 		ldy #15
@@ -1120,7 +1120,7 @@ kk		eor #0
 		dey
 		dex
 		bne -
-		.if TARGET=C128
+		.if TARGET==C128
 		#ram
 		.fi
 		.fi
