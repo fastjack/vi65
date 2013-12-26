@@ -22,7 +22,7 @@ col		= $dc00
 width		= 64
 height		= 25
 cache		= $334
-		.elsif (TARGET==PLUS4)
+		.elsif TARGET==PLUS4
 scr		= $e000
 col		= $0c00
 width		= 64
@@ -76,7 +76,7 @@ displayinit	.proc
 		.fi
 		.if (TARGET==C64) || (TARGET==C128) || (TARGET==PLUGIN)
 		#kernal
-		.if (TARGET==C128)
+		.if TARGET==C128
 		lda #$47
 		sta $d506
 		lda #$7f
@@ -109,7 +109,7 @@ cl		sta col,x
 
 c1		.byte $15, $20, $11, $16, $18
 c2		.byte $00, $06, $3b, $08, ((col >> 6) & $f0)+((scr & $2000) >> 10)
-		.elsif (TARGET==PLUS4)
+		.elsif TARGET==PLUS4
 		lda #$06
 		sta $ff19
 		lda #$37
@@ -201,7 +201,7 @@ dpname		.text "S:",k_return
 displayexit	.proc
 		#kernal
 		.if (TARGET==C64) || (TARGET==C128) || (TARGET==PLUGIN)
-		.if (TARGET==C128)
+		.if TARGET==C128
 		lda #$04
 		sta $d506
 		.fi
@@ -222,7 +222,7 @@ displayexit	.proc
 		sta $ff14
 		lda #147
 		jmp chrout
-		.elsif (TARGET==ATARI800)
+		.elsif TARGET==ATARI800
 		ldx #$20
 		lda #12
 		sta iccom,x
@@ -231,7 +231,7 @@ displayexit	.proc
 		lda #12
 		sta iccom,x
 		jmp ciov		;close
-		.elsif (TARGET==APPLE2)
+		.elsif TARGET==APPLE2
 		rts
 		.fi
 		.pend
@@ -337,7 +337,7 @@ leng		cpx #height-1
 		rts
 		.pend
 
-		.if (TARGET==APPLE2)
+		.if TARGET==APPLE2
 		.cerror *>$2000
 		*= $4000
 		.fi
@@ -1098,7 +1098,7 @@ at2		lda #0
 size		= *+1
 		ldx #8
 -
-		.if (TARGET==ATARI800)
+		.if TARGET==ATARI800
 		lda screen
 		sec
 		sbc #width2
@@ -1106,7 +1106,7 @@ size		= *+1
 		bcs +
 		dec screen+1
 +
-		.elsif (TARGET==APPLE2)
+		.elsif TARGET==APPLE2
 		lda screen+1
 		sec
 		sbc #>1024

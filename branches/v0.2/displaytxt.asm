@@ -117,7 +117,7 @@ c2		.byte $00, $0f, $06, $1b, $08, ((scr >> 6) & $f0)+6
 		ldx #0
 		txa
 -
-		.if (TARGET==VIC20BIG)
+		.if TARGET==VIC20BIG
 		sta $9400,x
 		sta $9500,x
 		.else
@@ -165,7 +165,7 @@ e		sta scr-$400,x
 		rts
 		.elsif (TARGET==PET40) || (TARGET==PET80)
 		rts
-		.elsif (TARGET==ATARI800)
+		.elsif TARGET==ATARI800
 		lda #$70
 		sta $2c8		;border
 		lda #$00
@@ -187,9 +187,9 @@ displayexit	.proc
 		.elsif (TARGET==PET40) || (TARGET==PET80)
 		lda #147
 		jmp chrout
-		.elsif (TARGET==ATARI800)
+		.elsif TARGET==ATARI800
 		rts
-		.elsif (TARGET==APPLE2)
+		.elsif TARGET==APPLE2
 		rts
 		.fi
 		.pend
@@ -457,9 +457,9 @@ at1		lda scr,x
 		eor #64
 +		ldy tochar.mode+1
 		bne +
-		.if (TARGET==ATARI800)
+		.if TARGET==ATARI800
 		lda #25+64
-		.elsif (TARGET==APPLE2)
+		.elsif TARGET==APPLE2
 		lda #255
 		.else
 		lda #97
@@ -468,9 +468,9 @@ at1		lda scr,x
 size		= *+1
 		ldy #128
 		bmi at2
-		.if (TARGET==ATARI800)
+		.if TARGET==ATARI800
 		lda #21+64
-		.elsif (TARGET==APPLE2)
+		.elsif TARGET==APPLE2
 		lda #255
 		.else
 		lda #98

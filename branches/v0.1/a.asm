@@ -261,9 +261,9 @@ memoryend	= $8000
 status		= $96
 time		= $8f
 keybuffer	= 623
-		.if (TARGET==PET80)
+		.if TARGET==PET80
 keyrepeatdelay	= $e5
-		.elsif (TARGET==PET40)
+		.elsif TARGET==PET40
 keyrepeatdelay	= 1002
 		.fi
 drive		= $d4
@@ -454,7 +454,7 @@ e		cpx waitkey.read+1
 old		jmp $ffff
 		.pend
 
-		.elsif (TARGET==C128)
+		.elsif TARGET==C128
 irq		.proc
 		ldx $d2
 		lda $100a,x
@@ -474,7 +474,7 @@ e		cpx waitkey.read+1
 +
 old		jmp $ffff
 		.pend
-		.elsif (TARGET==ATARI800)
+		.elsif TARGET==ATARI800
 irq		.proc
 		bit critical
 		bmi +
@@ -498,7 +498,7 @@ e		cpx waitkey.read+1
 old		jmp $ffff
 		.pend
 		.elsif (TARGET==PLUS4) || (TARGET==C16)
-		.if (TARGET==PLUS4)
+		.if TARGET==PLUS4
 irqram		pha
 		sta $ff3e
 
@@ -587,7 +587,7 @@ start
 		lda #$80
 +		sta alloc.end+1
 		.elsif TARGET==PLUS4
-		.if (GFX==0)
+		.if GFX==0
 		lda $38
 		sta alloc.end+1
 		.fi
