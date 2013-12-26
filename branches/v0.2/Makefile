@@ -30,6 +30,7 @@ all: a.asm insert.asm cmdline.asm motion.asm scroll.asm displaytxt.asm displaygf
 	petscii6x8.fnt atascii6x8.fnt a2ascii6x8.fnt \
 	petscii5x8.fnt atascii5x8.fnt a2ascii5x8.fnt \
 	petscii4x8.fnt atascii4x8.fnt
+	mkdir -p bin
 	$(TASS) -b -a -B -C a.asm -o bin/vi65_c64_40 -DTARGET=64 -DGFX=0 && exomizer -s sys -n bin/vi65_c64_40 -o bin/vi65_c64_40 && addcopyr bin/vi65_c64_40
 	$(TASS) -b -a -B -C a.asm -o bin/vi65_c64_53 -DTARGET=64 -DGFX=1 && exomizer -s sys -n bin/vi65_c64_53 -o bin/vi65_c64_53 && addcopyr bin/vi65_c64_53
 	$(TASS) -b -a -B -C a.asm -o bin/vi65_c64_64 -DTARGET=64 -DGFX=2 && exomizer -s sys -n bin/vi65_c64_64 -o bin/vi65_c64_64 && addcopyr bin/vi65_c64_64
