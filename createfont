@@ -1,0 +1,93 @@
+#!/usr/bin/python
+#
+#    VI65 createfont (c) 2010-2013 Soci/Singular (soci@c64.rulez.org)
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+import sys
+
+f=open('font'+sys.argv[1]+'.fnt', 'r')
+f.read(2)
+fnt=f.read(2048)
+f.close()
+
+f=open(sys.argv[2]+sys.argv[1]+'.fnt', 'w')
+f.write(chr(0)+chr(32))
+
+if sys.argv[2]=='petscii':
+    f.write(fnt[0x40*8:0x41*8])
+    f.write(fnt[0x61*8:0x7b*8])
+    f.write(fnt[0x5b*8:0x5c*8])
+    f.write(fnt[0xa3*8:0xa4*8])
+    f.write(fnt[0x5d*8:0x5e*8])
+    f.write(fnt[0x86*8:0x88*8])
+    f.write(fnt[0x20*8:0x27*8])
+    f.write(fnt[0xb4*8:0xb5*8])
+    f.write(fnt[0x28*8:0x40*8])
+    f.write(fnt[0x80*8:0x81*8])
+    f.write(fnt[0x41*8:0x5b*8])
+    f.write(fnt[0x81*8:0x86*8])
+    f.write(fnt[0x00*8:0x20*8])
+
+if sys.argv[2]=='atascii':
+    f.write(fnt[0x20*8:0x60*8])
+    f.write(fnt[0x88*8:0x89*8])
+    f.write(fnt[0x0b*8:0x0c*8])
+    f.write(fnt[0x0a*8:0x0b*8])
+    f.write(fnt[0x1d*8:0x1e*8])
+    f.write(fnt[0x13*8:0x14*8])
+    f.write(fnt[0x0e*8:0x0f*8])
+    f.write(fnt[0x89*8:0x8c*8])
+    f.write(fnt[0x0c*8:0x0d*8])
+    f.write(fnt[0x8c*8:0x8d*8])
+    f.write(fnt[0x1c*8:0x1d*8])
+    f.write(fnt[0x1e*8:0x1f*8])
+    f.write(fnt[0x17*8:0x18*8])
+    f.write(fnt[0x0f*8:0x10*8])
+    f.write(fnt[0x1b*8:0x1c*8])
+    f.write(fnt[0x8d*8:0x8e*8])
+    f.write(fnt[0x10*8:0x11*8])
+    f.write(fnt[0x80*8:0x82*8])
+    f.write(fnt[0x8e*8:0x8f*8])
+    f.write(fnt[0x02*8:0x03*8])
+    f.write(fnt[0x14*8:0x15*8])
+    f.write(fnt[0x12*8:0x13*8])
+    f.write(fnt[0x11*8:0x12*8])
+    f.write(fnt[0x01*8:0x02*8])
+    f.write(fnt[0x0d*8:0x0e*8])
+    f.write(fnt[0x8f*8:0x90*8])
+    f.write(fnt[0x86*8:0x87*8])
+    f.write(fnt[0x90*8:0x91*8])
+    f.write(fnt[0x87*8:0x88*8])
+    f.write(fnt[0x91*8:0x93*8])
+    f.write(fnt[0x61*8:0x7b*8])
+    f.write(fnt[0x93*8:0x94*8])
+    f.write(fnt[0x83*8:0x84*8])
+    f.write(fnt[0x94*8:0x97*8])
+
+if sys.argv[2]=='a2ascii':
+    r=''
+    for i in fnt:
+        p=0
+        for y in range(8):
+            if ord(i) & (128 >> y): p|=1 << y
+        r+=chr(p)
+    fnt=r
+    f.write(fnt[0x40*8:0x60*8])
+    f.write(fnt[0x20*8:0x40*8])
+    f.write(fnt[0x40*8:0x80*8])
+f.close()
+
