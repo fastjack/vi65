@@ -16,12 +16,12 @@
 ;    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ;
 
-		.if (TARGET=C64) | (TARGET=PLUGIN)
+		.if (TARGET==C64) || (TARGET==PLUGIN)
 width		= 80
 height		= 25
 scr		= $400
 cache		= $334
-		.elsif TARGET=C128
+		.elsif TARGET==C128
 width		= 80
 height		= 25
 scr		= $400
@@ -297,16 +297,16 @@ npal
 nu
 		ldy #0
 -
-		.if (TARGET=C64) | (TARGET=PLUGIN)
+		.if (TARGET==C64) || (TARGET==PLUGIN)
 		inc $01
-		.elsif TARGET=C128
+		.elsif TARGET==C128
 		lda #$0f
 		sta $ff00
 		.fi
 		lda (screen),y
-		.if (TARGET=C64) | (TARGET=PLUGIN)
+		.if (TARGET==C64) || (TARGET==PLUGIN)
 		dec $01
-		.elsif TARGET=C128
+		.elsif TARGET==C128
 		#ram
 		.fi
 		ldx #$1f

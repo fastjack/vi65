@@ -124,9 +124,9 @@ pla:		.macro
 		sta \@
 		.endm
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 zpstart		= $80
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 zpstart		= $77
 		.else
 zpstart		= $11
@@ -166,10 +166,10 @@ num		.fill 3+2
 zpend
 		.here
 
-		.if (TARGET=C64) | (TARGET=PLUGIN)
+		.if (TARGET==C64) || (TARGET==PLUGIN)
 		*= $801-2
 
-		.if (GFX=1) | (GFX=2) | (GFX=3)
+		.if (GFX==1) || (GFX==2) || (GFX==3)
 memoryend	= $dc00
 		.else
 memoryend	= $ff00
@@ -181,7 +181,7 @@ keybuffer	= 631
 keyrepeatdelay	= 651
 drive		= $ba
 zpsave		= $02c0
-		.if GFX=0
+		.if GFX==0
 linebuffer	= $ff00
 		.else
 linebuffer	= $0400
@@ -192,7 +192,7 @@ kernal		.macro
 ram		.macro
 		inc $01
 		.endm
-		.elsif TARGET=VIC20BIG
+		.elsif TARGET==VIC20BIG
 		*= $1201-2
 
 memoryend	= $8000
@@ -206,7 +206,7 @@ kernal		.macro
 		.endm
 ram		.macro
 		.endm
-		.elsif TARGET=VIC20
+		.elsif TARGET==VIC20
 		*= $1001-2
 
 memoryend	= $1e00
@@ -220,7 +220,7 @@ kernal		.macro
 		.endm
 ram		.macro
 		.endm
-		.elsif TARGET=C16
+		.elsif TARGET==C16
 		*= $1001-2
 
 memoryend	= $4000
@@ -234,7 +234,7 @@ kernal		.macro
 		.endm
 ram		.macro
 		.endm
-		.elsif TARGET=PLUS4
+		.elsif TARGET==PLUS4
 		*= $1001-2
 
 		.if GFX
@@ -254,16 +254,16 @@ kernal		.macro
 ram		.macro
 		sta $ff3f
 		.endm
-		.elsif (TARGET=PET40) | (TARGET=PET80)
+		.elsif (TARGET==PET40) || (TARGET==PET80)
 		*= $401-2
 
 memoryend	= $8000
 status		= $96
 time		= $8f
 keybuffer	= 623
-		.if (TARGET=PET80)
+		.if (TARGET==PET80)
 keyrepeatdelay	= $e5
-		.elsif (TARGET=PET40)
+		.elsif (TARGET==PET40)
 keyrepeatdelay	= 1002
 		.fi
 drive		= $d4
@@ -272,7 +272,7 @@ kernal		.macro
 		.endm
 ram		.macro
 		.endm
-		.elsif TARGET=C128
+		.elsif TARGET==C128
 		*= $1c01-2
 
 memoryend	= $ff00
@@ -288,7 +288,7 @@ kernal		.macro
 ram		.macro
 		sta $ff01
 		.endm
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		*= $0800-6
 
 memoryend	= $bc00
@@ -299,7 +299,7 @@ kernal		.macro
 		.endm
 ram		.macro
 		.endm
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		*= $0c00-4
 
 memoryend	= $bc00
@@ -312,7 +312,7 @@ ram		.macro
 		.endm
 		.fi
 
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 k_cursorup	= 28
 k_cursordown	= 29
 k_cursorleft	= 30
@@ -321,7 +321,7 @@ k_del		= 126
 k_return	= 155
 k_ins		= 255
 k_control	= -128
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 k_cursordown	= 10
 k_cursorup	= 11
 k_cursorleft	= 255
@@ -341,7 +341,7 @@ k_ins		= 148
 k_control	= 64
 		.fi
 
-		.if TARGET=PLUGIN
+		.if TARGET==PLUGIN
 		*= $1000-2
 
 		.word $1000
@@ -350,12 +350,12 @@ k_control	= 64
 		rts
 		jsr $ffbd
 		jmp start
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		.word $ffff
 		.word *+4
 		.word prgend-1
 		jmp start
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		.word *+4
 		.word prgend-*-2
 		jmp start
@@ -366,15 +366,15 @@ k_control	= 64
 ss		.word 0
 		.fi
 
-		.if (TARGET=VIC20BIG) & (GFX!=0)
+		.if (TARGET==VIC20BIG) && (GFX!=0)
 		*= $12a0		;gfxhez!
 		.fi
 
-		.if TARGET=C128
+		.if TARGET==C128
 fkeys		.byte $85, $89, $86, $8a, $87, $8b, $88, $8c, $83, $84
-		.elsif (TARGET=PLUS4) | (TARGET=C16)
+		.elsif (TARGET==PLUS4) || (TARGET==C16)
 fkeys		.byte $85, $86, $87, $89, $8a, $8b, $8c, $88
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 kbname		.text "K:",k_return
 		.fi
 
@@ -382,7 +382,7 @@ nolinetxt	.char nolinetxte-nolinetxt-1
 		.text "-- empty --"
 nolinetxte
 
-		.if (TARGET=C64) | (TARGET=PLUGIN)
+		.if (TARGET==C64) || (TARGET==PLUGIN)
 nmiram		sec
 		.byte $90
 irqram		clc
@@ -418,7 +418,7 @@ e		cpx waitkey.read+1
 old		jmp $ffff
 		.pend
 
-		.elsif (TARGET=VIC20) | (TARGET=VIC20BIG)
+		.elsif (TARGET==VIC20) || (TARGET==VIC20BIG)
 
 irq		.proc
 		lsr $c6
@@ -436,7 +436,7 @@ e		cpx waitkey.read+1
 old		jmp $ffff
 		.pend
 
-		.elsif (TARGET=PET40) | (TARGET=PET80)
+		.elsif (TARGET==PET40) || (TARGET==PET80)
 
 irq		.proc
 		lsr $9e
@@ -454,7 +454,7 @@ e		cpx waitkey.read+1
 old		jmp $ffff
 		.pend
 
-		.elsif (TARGET=C128)
+		.elsif (TARGET==C128)
 irq		.proc
 		ldx $d2
 		lda $100a,x
@@ -474,7 +474,7 @@ e		cpx waitkey.read+1
 +
 old		jmp $ffff
 		.pend
-		.elsif (TARGET=ATARI800)
+		.elsif (TARGET==ATARI800)
 irq		.proc
 		bit critical
 		bmi +
@@ -497,8 +497,8 @@ e		cpx waitkey.read+1
 +
 old		jmp $ffff
 		.pend
-		.elsif (TARGET=PLUS4) | (TARGET=C16)
-		.if (TARGET=PLUS4)
+		.elsif (TARGET==PLUS4) || (TARGET==C16)
+		.if (TARGET==PLUS4)
 irqram		pha
 		sta $ff3e
 
@@ -540,7 +540,7 @@ start
 		sta zpsave,x
 		dex
 		bpl -
-		.if (TARGET=C64) | (TARGET=PLUGIN)
+		.if (TARGET==C64) || (TARGET==PLUGIN)
 		#loadw irqram, $fffe
 		#loadw nmiram, $fffa
 		sei
@@ -551,7 +551,7 @@ start
 		sta 650
 		lda #$37
 		sta $01
-		.elsif TARGET=C128
+		.elsif TARGET==C128
 		sei
 		#movew $314, irq.old+1
 		#loadw irq, $314
@@ -569,7 +569,7 @@ start
 		sta $d502		;ram
 		cli
 		sta $ff00
-		.elsif (TARGET=VIC20) | (TARGET=VIC20BIG)
+		.elsif (TARGET==VIC20) || (TARGET==VIC20BIG)
 		lda $38
 		sta alloc.end+1
 		sei
@@ -580,14 +580,14 @@ start
 		cli
 		lda #128
 		sta 650
-		.elsif (TARGET=PLUS4) | (TARGET=C16)
-		.if TARGET=C16
+		.elsif (TARGET==PLUS4) || (TARGET==C16)
+		.if TARGET==C16
 		lda $38
 		bpl +
 		lda #$80
 +		sta alloc.end+1
-		.elsif TARGET=PLUS4
-		.if (GFX=0)
+		.elsif TARGET==PLUS4
+		.if (GFX==0)
 		lda $38
 		sta alloc.end+1
 		.fi
@@ -606,7 +606,7 @@ start
 		dex
 		bpl -
 		cli
-		.elsif (TARGET=PET40) | (TARGET=PET80)
+		.elsif (TARGET==PET40) || (TARGET==PET80)
 		sei
 		#movew $90, irq.old+1
 		#loadw irq, $90
@@ -617,7 +617,7 @@ start
 		txs
 		lda #14
 		jsr $ffd2
-		.elsif TARGET=ATARI800
+		.elsif TARGET==ATARI800
 		sei
 		#movew $224, irq.old+1
 		#loadw irq, $224
@@ -644,7 +644,7 @@ start
 		lda #0
 		sta icax2,x
 		jsr ciov		;keyboard
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		lda $74
 		sta alloc.end+1
 		lda #1
@@ -671,7 +671,7 @@ start
 nu		.text "doc.seq"
 +
 		.endc
-		.if TARGET=PLUGIN
+		.if TARGET==PLUGIN
 		ldy $b7
 		cpy #width-3
 		blt +
@@ -884,7 +884,7 @@ bannere
 
 waitkey		.proc
 -
-		.if TARGET=APPLE2
+		.if TARGET==APPLE2
 		lda $c000
 		bmi +
 		jsr display
@@ -907,7 +907,7 @@ write		cpx #0
 +		lda keybuffer+1,x
 		stx read+1
 		.fi
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		sec
 		ror critical
 		sta 764
@@ -929,7 +929,7 @@ ej		lda #0
 		pha
 		jsr cursoroff
 
-		.if (TARGET!=ATARI800) & (TARGET!=APPLE2)
+		.if (TARGET!=ATARI800) && (TARGET!=APPLE2)
 		lda keyrepeatdelay
 		lsr
 		beq +
@@ -942,7 +942,7 @@ ej		lda #0
 		.pend
 
 cursorup	.proc
-		.if TARGET=APPLE2
+		.if TARGET==APPLE2
 		lda #0
 		inc *-1
 		bne +
@@ -2228,10 +2228,10 @@ load		.proc
 		lda #registers.file
 		sta references.reg,x
 		jsr insertref
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda #4
 		jsr open
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		lda #255
 		sta $d8			;onerr flag
 		lda #<nomem
@@ -2253,7 +2253,7 @@ load		.proc
 		lda #1
 		sta loading
 
-		.if (TARGET!=ATARI800) & (TARGET!=APPLE2)
+		.if (TARGET!=ATARI800) && (TARGET!=APPLE2)
 		ldx #k_return
 		lda filename+1
 		cmp #"$"
@@ -2271,7 +2271,7 @@ part		jsr savebuffer
 		jsr insertref2
 		#loadw linebuffer-4, cursorline
 
-loop		.if TARGET=ATARI800
+loop		.if TARGET==ATARI800
 		ldx #$20
 		lda #5
 		sta iccom,x
@@ -2287,7 +2287,7 @@ loop		.if TARGET=ATARI800
 		bmi nomem
 		ldx icbl+$20
 		dex
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		ldx #0
 -		jsr moncin
 		and #$7f
@@ -2348,7 +2348,7 @@ eol		cmp #k_return
 		lda #references.load
 		jsr append_regref
 
-		.if (TARGET=ATARI800) | (TARGET=APPLE2)
+		.if (TARGET==ATARI800) || (TARGET==APPLE2)
 		bcc j
 		.else
 		bcs nomem
@@ -2357,7 +2357,7 @@ eol		cmp #k_return
 		.fi
 
 nomem
-		.if TARGET=APPLE2
+		.if TARGET==APPLE2
 oldsp		ldx #0
 		txs
 		.fi
@@ -2371,7 +2371,7 @@ oldsp		ldx #0
 		geq +
 
 j
-		.if TARGET=APPLE2
+		.if TARGET==APPLE2
 		lda $c000
 		bmi +
 		.else
@@ -2428,10 +2428,10 @@ savebuffer	.proc
 loading		.byte 0
 
 save		.proc
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		lda #8
 		jsr open
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		lda #255
 		sta $d8			;onerr flag
 		lda #<ki
@@ -2463,7 +2463,7 @@ save		.proc
 		beq ki
 
 loop
-		.if TARGET=ATARI800
+		.if TARGET==ATARI800
 		ldx #$20
 		lda #9
 		sta iccom,x
@@ -2488,7 +2488,7 @@ loop
 		lda #0
 		sta icbl+1,x
 		jsr ciov		;output
-		.elsif TARGET=APPLE2
+		.elsif TARGET==APPLE2
 		ldy #4
 		lda (cursorline),y
 		beq +
@@ -2535,7 +2535,7 @@ loop
 		jsr cursornext
 		jmp loop
 ki
-		.if TARGET=APPLE2
+		.if TARGET==APPLE2
 oldsp		ldx #0
 		txs
 		.fi
@@ -2587,13 +2587,13 @@ paros
 		.include "insert.asm"
 		.include "ex.asm"
 		.include "io.asm"
-		.if GFX=1
+		.if GFX==1
 		.include "displaygfx53.asm"
-		.elsif GFX=2
+		.elsif GFX==2
 		.include "displaygfx64.asm"
-		.elsif (GFX=3) & (TARGET!=APPLE2)
+		.elsif (GFX==3) && (TARGET!=APPLE2)
 		.include "displaygfx80.asm"
-		.elsif GFX=4
+		.elsif GFX==4
 		.include "displayvdc.asm"
 		.else
 		.include "displaytxt.asm"
@@ -2647,7 +2647,7 @@ insert		.fill 6
 
 filename	.fill width-2
 
-		.if (TARGET!=C64) & (TARGET!=PLUGIN)
+		.if (TARGET!=C64) && (TARGET!=PLUGIN)
 zpsave		.fill zpend-zpstart
 		.fi
 memory
